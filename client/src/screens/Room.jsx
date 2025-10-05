@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 import peer from "../service/peer";
 import { useSocket } from "../context/SocketProvider";
+import "./RoomPage.css"; // ✅ Import CSS file
 
 const RoomPage = () => {
   const socket = useSocket();
@@ -110,35 +111,40 @@ const RoomPage = () => {
   ]);
 
   return (
-    <div>
-      <h1>Room Page</h1>
-      <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4>
-      {myStream && <button onClick={sendStreams}>Send Stream</button>}
-      {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
-      {myStream && (
-        <>
-          <h1>My Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="100px"
-            width="200px"
-            url={myStream}
-          />
-        </>
-      )}
-      {remoteStream && (
-        <>
-          <h1>Remote Stream</h1>
-          <ReactPlayer
-            playing
-            muted
-            height="100px"
-            width="200px"
-            url={remoteStream}
-          />
-        </>
-      )}
+    <div className="room-container">
+      <div className="room-card">
+        <h1>Room Page</h1>
+        <h4>{remoteSocketId ? "🟢 Connected" : "🔴 Waiting for user..."}</h4>
+
+        <div>
+          {myStream && (
+            <button onClick={sendStreams} className="room-btn">
+              Send Stream
+            </button>
+          )}
+          {remoteSocketId && (
+            <button onClick={handleCallUser} className="room-btn">
+              Call
+            </button>
+          )}
+        </div>
+
+        <div className="video-section">
+          {myStream && (
+            <div className="video-container">
+              <h2>My Stream</h2>
+              <ReactPlayer playing muted height="180px" width="320px" url={myStream} />
+            </div>
+          )}
+
+          {remoteStream && (
+            <div className="video-container">
+              <h2>Remote Stream</h2>
+              <ReactPlayer playing height="180px" width="320px" url={remoteStream} />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
